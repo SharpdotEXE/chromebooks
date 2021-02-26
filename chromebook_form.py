@@ -26,9 +26,6 @@ issue_label.grid(row=2, column=0)
 issue_entry = tk.Entry(root)
 issue_entry.grid(row=2, column=1)
 
-# submit_button = tk.Button(root, text='Submit', pady=5)
-# submit_button.grid(row=3, column=1)
-
 warranty_label = tk.Label(root, text='Under Warranty?')
 warranty_label.grid(row=0, column=2)
 
@@ -49,5 +46,8 @@ warranty_date_label.grid(row=2, column=2)
 
 warranty_date_entry = tk.Entry(root)
 warranty_date_entry.grid(row=2, column=3)
+
+submit_button = tk.Button(root, text='Submit', pady=5)
+submit_button.grid(row=3, column=2)
 
 root.mainloop()
