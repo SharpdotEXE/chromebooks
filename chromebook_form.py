@@ -14,7 +14,7 @@ def on_submit():
     warranty_expiration = warranty_date_entry.get()
 
     # change path as necessary
-    with open('C:/Users/pthompson/PycharmProjects/pythonProject/chromebooks.txt', 'a') as file_object:
+    with open('C:/Users/wav11/PycharmProjects/pythonProject/chromebooks.txt', 'a') as file_object:
         file_object.write(f'service_tag = {service_tag}\n')
         file_object.write(f'location = {location}\n')
         file_object.write(f'date_acquired = {date_acquired}\n')
@@ -23,6 +23,31 @@ def on_submit():
         file_object.write('\n')
 
     print('submitted!')
+
+    submitted_window()
+
+
+def submitted_window():
+
+    root2 = tk.Tk()
+    root2.title('Submitted!')
+
+    submitted_label = tk.Label(root2, text='Submitted!', width=25)
+    submitted_label.grid(row=0, column=0)
+
+    ok_button = tk.Button(root2, text='Ok', command=root2.destroy)
+    ok_button.grid(row=1, column=0)
+
+    root2.mainloop()
+
+
+def clear_entries():
+
+    service_tag_entry.delete(0, 'end')
+    date_entry.delete(0, 'end')
+    location_entry.delete(0, 'end')
+    issue_entry.delete(0, 'end')
+    warranty_date_entry.delete(0, 'end')
 
 
 service_tag_label = tk.Label(root, text='Service Tag#', bg='#b8b6b6')
@@ -55,9 +80,11 @@ warranty_date_label.grid(row=4, column=0)
 warranty_date_entry = tk.Entry(root, justify='center')
 warranty_date_entry.grid(row=4, column=1)
 
+clear_button = tk.Button(root, text='Clear', pady=5, command=clear_entries)
+clear_button.grid(row=5, column=0)
+
 submit_button = tk.Button(root, text='Submit', pady=5, command=on_submit)
 submit_button.grid(row=5, column=1)
 
-# add submitted notification
 
 root.mainloop()
