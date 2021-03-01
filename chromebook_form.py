@@ -13,6 +13,7 @@ def on_submit():
     issue = issue_entry.get()
     warranty_expiration = warranty_date_entry.get()
 
+    # change path as necessary
     with open('C:/Users/pthompson/PycharmProjects/pythonProject/chromebooks.txt', 'a') as file_object:
         file_object.write(f'service_tag = {service_tag}\n')
         file_object.write(f'location = {location}\n')
@@ -57,5 +58,6 @@ warranty_date_entry.grid(row=4, column=1)
 submit_button = tk.Button(root, text='Submit', pady=5, command=on_submit)
 submit_button.grid(row=5, column=1)
 
+# add submitted notification
 
 root.mainloop()
