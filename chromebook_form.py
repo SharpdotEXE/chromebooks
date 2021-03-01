@@ -22,8 +22,6 @@ def on_submit():
         file_object.write(f'warranty_expiration = {warranty_expiration}\n')
         file_object.write('\n')
 
-    print('submitted!')
-
     submitted_window()
 
 
