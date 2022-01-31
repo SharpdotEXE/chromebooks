@@ -6,38 +6,49 @@ database = 'chromebooks'
 pw = 'wav11@@wav11'
 create_database_query = 'CREATE DATABASE chromebooks'
 
-from_db = []
-columns = ['ID', 'Location', 'Service Tag', 'Issue', 'Status', 'Date Acquired', 'Warranty Expiration Date']
-
-
 create_chromebook_table = """
 CREATE TABLE chromebooks (
-    cb_id INT PRIMARY KEY,
+    cb_ID INT PRIMARY KEY,
     cb_location VARCHAR(15) NOT NULL,
     cb_service_tag VARCHAR(7) NOT NULL,
     cb_issue VARCHAR(40) NOT NULL,
     cb_status VARCHAR(15) NOT NULL,
     cb_date_acquired DATE,
-    cb_warranty_expiration DATE
+    cb_warranty_exp DATE
     );
 """
 
-cb_ID = 0
-cb_location = 'Krebs'
-cb_service_tag = 'ABCD123'
-cb_issue = 'Broken screen'
-cb_status = 'box on way'
-cb_date_acquired = '2021-12-15'
-cb_warranty_exp = '2022-01-25'
+cb_ID = 1
+cb_location = 'Crowder'
+cb_service_tag = 'XYZ97'
+cb_issue = 'Keyboard'
+cb_status = 'Arrived'
+cb_date_acquired = '2021-11-14'
+cb_warranty_exp = '2022-04-16'
+
+add_chromebook = '''
+INSERT INTO chromebooks (cb_ID, cb_location, cb_service_tag, cb_issue, cb_status, cb_date_acquired, cb_warranty_exp)
+VALUES (%s, %s, %s, %s, %s, %s, %s)
+'''
+
+val = [
+    (cb_ID, cb_location, cb_service_tag, cb_issue, cb_status, cb_date_acquired, cb_warranty_exp)
+]
+
+# add_chromebook = f"""
+# INSERT INTO chromebooks VALUES
+# ({cb_ID}, {cb_location}, {cb_service_tag}, {cb_issue}, {cb_status}, {cb_date_acquired}, {cb_warranty_exp});
+# """.format(cb_ID = cb_ID, cb_location = cb_location, cb_service_tag = cb_service_tag, cb_issue = cb_issue,
+#            cb_status = cb_status, cb_date_acquired = cb_date_acquired, cb_warranty_exp = cb_warranty_exp)
+
+# add_chromebook = 'INSERT INTO chromebooks (cb_ID, cb_location, cb_service_tag, cb_issue, cb_status, cb_date_acquired, cb_warranty_exp) VALUES (%s, %s, %s, %s, %s, %s, %s)'
+# chromebook1 = (cb_ID, cb_location, cb_service_tag, cb_issue, cb_status, cb_date_acquired, cb_warranty_exp)
 
 
 
+# add_chromebook = 'INSERT INTO chromebooks VALUES (' + str(cb_ID) + ', ' + str(cb_service_tag) + ', ' + str(cb_location) + ', ' + str(cb_issue) + ', ' + str(cb_status) + ', ' + str(cb_date_acquired) + ', ' + str(cb_warranty_exp) + ');'
+# print(add_chromebook)
 
-add_chromebook = f"""
-INSERT INTO chromebooks VALUES
-({cb_ID}, {cb_location}, {cb_service_tag}, {cb_issue}, {cb_status}, {cb_date_acquired}, {cb_warranty_exp});
-""".format(cb_ID = cb_ID, cb_location = cb_location, cb_service_tag = cb_service_tag, cb_issue = cb_issue,
-           cb_status = cb_status, cb_date_acquired = cb_date_acquired, cb_warranty_exp = cb_warranty_exp)
 
 drop_table = """
 DROP TABLE chromebooks
@@ -46,13 +57,12 @@ DROP TABLE chromebooks
 
 query1 = """
 SELECT *
-FROM chromebooks WHERE Location = Krebs;
+FROM chromebooks;
 """
 
 delete_chromebook = """
 DELETE FROM chromebooks WHERE cb_location = cb_location;
 """
-
 
 
 def create_db_connection(host_name, user_name, user_password, db_name):
@@ -97,15 +107,25 @@ def read_query(connection, query):
     except Error as err:
         print(f'Error: "{err}"')
 
+def execute_add_chromebook(connection, add_chromebook, val):
+    cursor = connection.cursor()
+    try:
+        cursor.executemany(add_chromebook, val)
+        connection.commit()
+        print("Query successful")
+    except Error as err:
+        print(f"Error: '{err}'")
+
 
 connection = create_db_connection("localhost", "root", pw, database)
 # create_database(connection, create_database_query)
 # execute_query(connection, drop_table)
 # execute_query(connection, create_chromebook_table)
-execute_query(connection, add_chromebook)
+# execute_query(connection, add_chromebook)
 # execute_query(connection, delete_chromebook)
+execute_add_chromebook(connection, add_chromebook, val)
 
-# results = read_query(connection, q5)
-#
-# for result in results:
-#   print(result)
+results = read_query(connection, query1)
+
+for result in results:
+  print(result)
