@@ -1,6 +1,5 @@
 import mysql.connector
 from mysql.connector import Error
-import pandas as pd
 
 database = 'chromebooks'
 pw = 'wav11@@wav11'
@@ -20,34 +19,20 @@ CREATE TABLE chromebooks (
 
 cb_ID = 1
 cb_location = 'Crowder'
-cb_service_tag = 'XYZ97'
-cb_issue = 'Keyboard'
-cb_status = 'Arrived'
-cb_date_acquired = '2021-11-14'
-cb_warranty_exp = '2022-04-16'
+cb_service_tag = 'ABC123'
+cb_issue = 'Screen'
+cb_status = 'On the way'
+cb_date_acquired = '2021-01-15'
+cb_warranty_exp = '2022-03-14'
 
 add_chromebook = '''
 INSERT INTO chromebooks (cb_ID, cb_location, cb_service_tag, cb_issue, cb_status, cb_date_acquired, cb_warranty_exp)
 VALUES (%s, %s, %s, %s, %s, %s, %s)
 '''
 
-val = [
+columns = [
     (cb_ID, cb_location, cb_service_tag, cb_issue, cb_status, cb_date_acquired, cb_warranty_exp)
 ]
-
-# add_chromebook = f"""
-# INSERT INTO chromebooks VALUES
-# ({cb_ID}, {cb_location}, {cb_service_tag}, {cb_issue}, {cb_status}, {cb_date_acquired}, {cb_warranty_exp});
-# """.format(cb_ID = cb_ID, cb_location = cb_location, cb_service_tag = cb_service_tag, cb_issue = cb_issue,
-#            cb_status = cb_status, cb_date_acquired = cb_date_acquired, cb_warranty_exp = cb_warranty_exp)
-
-# add_chromebook = 'INSERT INTO chromebooks (cb_ID, cb_location, cb_service_tag, cb_issue, cb_status, cb_date_acquired, cb_warranty_exp) VALUES (%s, %s, %s, %s, %s, %s, %s)'
-# chromebook1 = (cb_ID, cb_location, cb_service_tag, cb_issue, cb_status, cb_date_acquired, cb_warranty_exp)
-
-
-
-# add_chromebook = 'INSERT INTO chromebooks VALUES (' + str(cb_ID) + ', ' + str(cb_service_tag) + ', ' + str(cb_location) + ', ' + str(cb_issue) + ', ' + str(cb_status) + ', ' + str(cb_date_acquired) + ', ' + str(cb_warranty_exp) + ');'
-# print(add_chromebook)
 
 
 drop_table = """
@@ -55,14 +40,15 @@ DROP TABLE chromebooks
 """
 
 
-query1 = """
+select_all = """
 SELECT *
 FROM chromebooks;
 """
 
 delete_chromebook = """
-DELETE FROM chromebooks WHERE cb_location = cb_location;
+DELETE FROM chromebooks WHERE cb_service_tag = %s;
 """
+sn = [('ABC123')]
 
 
 def create_db_connection(host_name, user_name, user_password, db_name):
@@ -107,25 +93,34 @@ def read_query(connection, query):
     except Error as err:
         print(f'Error: "{err}"')
 
-def execute_add_chromebook(connection, add_chromebook, val):
+def execute_add_chromebook(connection, add_chromebook, columns):
     cursor = connection.cursor()
     try:
-        cursor.executemany(add_chromebook, val)
+        cursor.executemany(add_chromebook, columns)
         connection.commit()
         print("Query successful")
     except Error as err:
         print(f"Error: '{err}'")
 
+def execute_delete_chromebook(connection, delete_chromebook, sn):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(delete_chromebook, sn)
+        connection.commit()
+        print('Query successful')
+    except Error as err:
+        print(f'Error: "{err}"')
+
 
 connection = create_db_connection("localhost", "root", pw, database)
 # create_database(connection, create_database_query)
+# drop_and_add(connection)
 # execute_query(connection, drop_table)
 # execute_query(connection, create_chromebook_table)
-# execute_query(connection, add_chromebook)
-# execute_query(connection, delete_chromebook)
-execute_add_chromebook(connection, add_chromebook, val)
+# execute_add_chromebook(connection, add_chromebook, columns)
+# execute_delete_chromebook(connection, delete_chromebook, sn)
 
-results = read_query(connection, query1)
+results = read_query(connection, select_all)
 
 for result in results:
   print(result)
